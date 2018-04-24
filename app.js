@@ -19,9 +19,14 @@ import path from 'path';
 import history from 'connect-history-api-fallback';
 // 命令窗输出字体颜色变化
 import chalk from 'chalk';
+// 获取post参数
+import bodyParser from 'body-Parser'
 
 const app = express();
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 app.all("*", (req, res, next) => {
     res.header("Access-Control-Allow-Origin", req.headers.origin || '*');
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
