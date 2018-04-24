@@ -49,7 +49,8 @@ app.use(session({
     })
 }));
 
-// router(app);
+router(app);
 app.use(history());
+// 部署静态文件
 app.use(express.static("./public"));
 app.listen(config.port)

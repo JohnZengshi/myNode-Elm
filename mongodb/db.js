@@ -12,7 +12,7 @@ mongoose.Promise = require("bluebird");
 const db = mongoose.connection;
 db.once('open', () => {
     console.log(
-        chalk.green("数据库连接成功")
+        chalk.green("(MyNodeElm)数据库连接成功")
     )
 })
 db.on('error', (error) => {
