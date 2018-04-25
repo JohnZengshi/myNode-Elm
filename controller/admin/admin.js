@@ -4,8 +4,10 @@ import crypto from 'crypto'
 import formidable from 'formidable'
 import dtime from 'time-formater'
 import response from '../../Response/res'
-class Admin {
+import common from '../common/common'
+class Admin extends common {
     constructor() {
+        super();
         this.login = this.login.bind(this);
         this.register = this.register.bind(this);
         this.encryption = this.encryption.bind(this);
@@ -77,10 +79,11 @@ class Admin {
                 // 管理员没有注册
                 else {
                     let newpassword = this.encryption(password);
+                    let user_id = await this.getId("user_id");
                     const newAdmin = {
                         user_name: user_name,
                         password: newpassword,
-                        id: 1,
+                        id: user_id,
                         create_time: dtime().format('YYYY-MM-DD HH:mm'),
                         status: 1,
                         avatar: "default.jpg",
