@@ -42,7 +42,7 @@ class Admin extends common {
                     // 密码正确
                     if (admin.password === this.encryption(password)) {
                         // 设置session
-                        // req.session.user_id = user_id;
+                        req.session.user_id = admin.user_id;
                         res.send(response.AdminLogin(200));
                     }
                     // 密码错误
@@ -83,7 +83,7 @@ class Admin extends common {
                     const newAdmin = {
                         user_name: user_name,
                         password: newpassword,
-                        id: user_id,
+                        user_id: user_id,
                         create_time: dtime().format('YYYY-MM-DD HH:mm'),
                         status: 1,
                         avatar: "default.jpg",
@@ -96,6 +96,8 @@ class Admin extends common {
                         }
                         // 注册成功
                         else {
+                            // 设置session
+                            req.session.user_id = user_id;
                             res.send(response.AdminRegister(200))
                         }
                     });
@@ -103,6 +105,22 @@ class Admin extends common {
             }
         } catch (error) {
             throw new Error(error.message)
+        }
+    }
+    // 获取管理员的信息（回话中）
+    async getInfo(req, res, next) {
+        console.log(req.session.user_id);
+        let user_id = req.session.user_id
+        //   session有用户数据
+        if (user_id) {
+            let admin = await AdminModel.findOne({
+                user_id: user_id
+            },"-_id -password -__v")
+            res.send(response.AdminGetInfo(200, admin))
+        }
+        //   session没有用户数据
+        else {
+            res.send(response.AdminGetInfo(201))
         }
     }
     encryption(password) {
