@@ -1,7 +1,8 @@
 'use strict';
 import {
     loginCode,
-    registerCode
+    registerCode,
+    getInfoCode
 } from './code'
 class response {
     AdminLogin(code, data) {
@@ -17,6 +18,14 @@ class response {
             status: 0,
             message: registerCode[code],
             code: code,
+        }
+    }
+    AdminGetInfo(code, data) {
+        return {
+            status: 0,
+            message: getInfoCode[code],
+            code: code,
+            data: data
         }
     }
 }
