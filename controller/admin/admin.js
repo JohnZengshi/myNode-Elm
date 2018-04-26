@@ -4,8 +4,10 @@ import crypto from 'crypto'
 import formidable from 'formidable'
 import dtime from 'time-formater'
 import response from '../../Response/res'
-class Admin {
+import common from '../common/common'
+class Admin extends common {
     constructor() {
+        super();
         this.login = this.login.bind(this);
         this.register = this.register.bind(this);
         this.encryption = this.encryption.bind(this);
@@ -40,7 +42,7 @@ class Admin {
                     // 密码正确
                     if (admin.password === this.encryption(password)) {
                         // 设置session
-                        // req.session.user_id = user_id;
+                        req.session.user_id = admin.user_id;
                         res.send(response.AdminLogin(200));
                     }
                     // 密码错误
@@ -77,10 +79,11 @@ class Admin {
                 // 管理员没有注册
                 else {
                     let newpassword = this.encryption(password);
+                    let user_id = await this.getId("user_id");
                     const newAdmin = {
                         user_name: user_name,
                         password: newpassword,
-                        id: 1,
+                        user_id: user_id,
                         create_time: dtime().format('YYYY-MM-DD HH:mm'),
                         status: 1,
                         avatar: "default.jpg",
@@ -93,6 +96,8 @@ class Admin {
                         }
                         // 注册成功
                         else {
+                            // 设置session
+                            req.session.user_id = user_id;
                             res.send(response.AdminRegister(200))
                         }
                     });
@@ -100,6 +105,34 @@ class Admin {
             }
         } catch (error) {
             throw new Error(error.message)
+        }
+    }
+    // 获取管理员的信息（回话中）
+    async getInfo(req, res, next) {
+        let user_id = req.session.user_id
+        //   session有用户数据
+        if (user_id) {
+            let admin = await AdminModel.findOne({
+                user_id: user_id
+            }, "-_id -password -__v")
+            res.send(response.AdminGetInfo(200, admin))
+        }
+        //   session没有用户数据
+        else {
+            res.send(response.AdminGetInfo(201))
+        }
+    }
+    // 管理员登出
+    async singout(req, res, next) {
+        let user_id = req.session.user_id;
+        //   session有用户数据
+        if (user_id) {
+            req.session.destroy();
+            res.send(response.AdminSingout(200))
+        }
+        //   session没有用户数据
+        else {
+            res.send(response.AdminSingout(200))
         }
     }
     encryption(password) {
