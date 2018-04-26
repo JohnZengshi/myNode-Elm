@@ -2,7 +2,8 @@
 import {
     loginCode,
     registerCode,
-    getInfoCode
+    getInfoCode,
+    singoutCode
 } from './code'
 class response {
     AdminLogin(code, data) {
@@ -26,6 +27,13 @@ class response {
             message: getInfoCode[code],
             code: code,
             data: data
+        }
+    }
+    AdminSingout(code){
+        return {
+            status: 0,
+            message: singoutCode[code],
+            code: code,
         }
     }
 }
