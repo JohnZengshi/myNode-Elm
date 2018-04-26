@@ -16,9 +16,12 @@ let getInfoCode = {
     200: "从session中获取管理员信息成功",
     201: "从session中获取管理员信息失败，要重新登录"
 }
-
+let singoutCode = {
+    200: "退出成功"
+}
 module.exports = {
     loginCode,
     registerCode,
-    getInfoCode
+    getInfoCode,
+    singoutCode
 }
