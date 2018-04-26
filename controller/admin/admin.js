@@ -109,18 +109,30 @@ class Admin extends common {
     }
     // 获取管理员的信息（回话中）
     async getInfo(req, res, next) {
-        console.log(req.session.user_id);
         let user_id = req.session.user_id
         //   session有用户数据
         if (user_id) {
             let admin = await AdminModel.findOne({
                 user_id: user_id
-            },"-_id -password -__v")
+            }, "-_id -password -__v")
             res.send(response.AdminGetInfo(200, admin))
         }
         //   session没有用户数据
         else {
             res.send(response.AdminGetInfo(201))
+        }
+    }
+    // 管理员登出
+    async singout(req, res, next) {
+        let user_id = req.session.user_id;
+        //   session有用户数据
+        if (user_id) {
+            req.session.destroy();
+            res.send(response.AdminSingout(200))
+        }
+        //   session没有用户数据
+        else {
+            res.send(response.AdminSingout(200))
         }
     }
     encryption(password) {
